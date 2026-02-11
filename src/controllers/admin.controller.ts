@@ -219,7 +219,7 @@ export const assignTask = async (req: Request, res: Response): Promise<void> => 
       studentId,
       dueTime,
       priority,
-      adminId: new ObjectId(token.id)
+      adminId: token.id
     });
 
     res.status(201).json({
