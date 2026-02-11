@@ -19,6 +19,5 @@ export const loginStudent = async (req: any, res: any) => {
 
   const valid = await comparePassword(req.body.password, student.password);
   if (!valid) return res.status(401).json({ message: "Invalid password" });
-
-  res.json({ token: generateToken({ id: student._id, role: "student" }) });
+  res.json({ token: generateToken({ id: student._id, role: "student",adminId: student.adminId }) });
 };

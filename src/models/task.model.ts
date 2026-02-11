@@ -9,7 +9,12 @@ const taskSchema = new Schema({
     type: String,
     enum: ["pending", "overdue", "completed"],
     default: "pending"
-  }
+  },
+    adminId: {
+      type: Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true
+    }
 }, { timestamps: true });
 
 export default model("Task", taskSchema);
