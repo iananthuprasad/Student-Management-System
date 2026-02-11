@@ -26,7 +26,6 @@ export const getAllTasks = async (
     });
   }
 };
-
 export const getTaskById = async (
   req: Request,
   res: Response,
@@ -56,7 +55,6 @@ export const getTaskById = async (
     });
   }
 };
-
 export const updateTask = async (
   req: Request,
   res: Response,

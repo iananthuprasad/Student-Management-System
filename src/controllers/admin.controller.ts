@@ -22,41 +22,14 @@ export const addAdmin = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-
-export const addStudent = async (req: Request, res: Response) => {
-  try {
-    const { name, email, department, password } = req.body;
-    const token = req.token
-    const existingStudent = await Student.findOne({ email });
-    if (existingStudent) {
-      return res.status(400).json({ message: "Student already exists" });
-    }
-    const hashedPassword = await hashPassword(password);
-    const student = await Student.create({
-      name,
-      email,
-      department,
-      password: hashedPassword,
-      adminId: new ObjectId(token.id),
-    });
-
-    res.status(201).json({ message: "Student added successfully",data:student });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
-
 export const updateAdmin = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const token = req.token; 
-    console.log("token=========",token)
     const { name, email, password } = req.body;
-
     const admin = await Admin.findById(token.id);
-
     if (!admin) {
       res.status(404).json({
         success: false,
@@ -88,11 +61,31 @@ export const updateAdmin = async (
   }
 };
 
+export const addStudent = async (req: Request, res: Response) => {
+  try {
+    const { name, email, department, password } = req.body;
+    const token = req.token
+    const existingStudent = await Student.findOne({ email });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Student already exists" });
+    }
+    const hashedPassword = await hashPassword(password);
+    const student = await Student.create({
+      name,
+      email,
+      department,
+      password: hashedPassword,
+      adminId: new ObjectId(token.id),
+    });
 
+    res.status(201).json({ message: "Student added successfully",data:student });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 export const getAllStudents = async (req: Request, res: Response) => {
   try {
     const token = req.token;
-    console.log("tokenData============", token);
     if (!token?.id) {
       return res.status(401).json({ message: "Invalid token payload" });
     }
@@ -108,7 +101,6 @@ export const getAllStudents = async (req: Request, res: Response) => {
     });
   }
 };
-
 export const getStudentById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -125,8 +117,6 @@ export const getStudentById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-
-
 export const updateStudent = async (
   req: Request,
   res: Response,
@@ -157,7 +147,6 @@ export const updateStudent = async (
     res.status(500).json({ message: "Server error", error });
   }
 };
-
 export const deleteStudent = async (
   req: Request,
   res: Response,
@@ -179,15 +168,6 @@ export const deleteStudent = async (
   }
 };
 
-
-
-
-
-
-
-/**
- * Assign / Create Task
- */
 export const assignTask = async (req: Request, res: Response): Promise<void> => {
   try {
     const { title, description, studentId, dueTime, priority } = req.body;
@@ -214,11 +194,6 @@ export const assignTask = async (req: Request, res: Response): Promise<void> => 
     });
   }
 };
-
-
-/**
- * Get All Tasks (Admin)
- */
 export const getAllTasks = async (req: Request, res: Response): Promise<void> => {
   try {
     const token = req.token
@@ -238,8 +213,6 @@ export const getAllTasks = async (req: Request, res: Response): Promise<void> =>
     });
   }
 };
-
-
 export const getTaskById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -268,8 +241,6 @@ export const getTaskById = async (req: Request, res: Response): Promise<void> =>
     });
   }
 };
-
-
 export const updateTask = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -303,11 +274,6 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
     });
   }
 };
-
-
-/**
- * Delete Task
- */
 export const deleteTask = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
