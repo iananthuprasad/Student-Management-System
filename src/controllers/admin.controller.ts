@@ -65,7 +65,7 @@ export const addStudent = async (req: Request, res: Response) => {
   try {
     const { name, email, department, password } = req.body;
     const token = req.token
-    const existingStudent = await Student.findOne({ email });
+    const existingStudent = await Student.findOne({ email , adminId: new ObjectId(token.id) });
     if (existingStudent) {
       return res.status(400).json({ message: "Student already exists" });
     }
@@ -119,32 +119,73 @@ export const getStudentById = async (req: Request, res: Response) => {
 };
 export const updateStudent = async (
   req: Request,
-  res: Response,
+  res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
     const { name, email, department, password } = req.body;
 
-    if (!ObjectId.isValid(id)) {
-      res.status(400).json({ success: false, message: "Invalid Task ID" });
+    const token = req.token as any;
+    const adminId = token?.id;
+
+    if (!adminId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
       return;
     }
 
-    const student = await Student.findById(id);
-    if (!student) {
-      res.status(404).json({ message: "Student not found" });
+    // ✅ Validate ID
+    if (!ObjectId.isValid(id)) {
+      res.status(400).json({ success: false, message: "Invalid Student ID" });
       return;
     }
+
+    // ✅ Find student under this admin
+    const student = await Student.findOne({ _id: id, adminId });
+    if (!student) {
+      res.status(404).json({ success: false, message: "Student not found" });
+      return;
+    }
+
+    // ✅ Email duplicate check (excluding current student)
+    if (email) {
+      const existingStudent = await Student.findOne({
+        email,
+        adminId,
+        _id: { $ne: id },
+      });
+
+      if (existingStudent) {
+        res.status(400).json({
+          success: false,
+          message: "Email already in use by another student",
+        });
+        return;
+      }
+
+      student.email = email;
+    }
+
+    // ✅ Update other fields
+    if (name) student.name = name;
+    if (department) student.department = department;
     if (password) {
       student.password = await hashPassword(password);
     }
-    student.name = name || student.name;
-    student.email = email || student.email;
-    student.department = department || student.department;
+
     await student.save();
-    res.json({ message: "Student updated successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+
+    res.status(200).json({
+      success: true,
+      message: "Student updated successfully",
+      data: student,
+    });
+
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };
 export const deleteStudent = async (
