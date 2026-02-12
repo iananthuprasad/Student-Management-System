@@ -5,7 +5,7 @@
     "dev": "ts-node-dev --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "echo \"No tests yet\""
+    "test": "jest --coverage"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,8 +17,11 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.21",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.8.7",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2"
   },
