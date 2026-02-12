@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "ts-node-dev --transpile-only src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "echo \"No tests yet\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
