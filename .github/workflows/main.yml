@@ -23,17 +23,17 @@ jobs:
       - name: Run Tests
         run: npm test
 
-      # - name: Build Project
-      #   run: npm run build
+      - name: Build Project
+        run: npm run build
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /var/www/node-app
-            git pull origin main
-            npm install
-            pm2 restart app
+      # - name: Deploy via SSH
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     script: |
+      #       cd /var/www/node-app
+      #       git pull origin main
+      #       npm install
+      #       pm2 restart app
