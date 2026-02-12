@@ -228,8 +228,7 @@ export const assignTask = async (req: Request, res: Response): Promise<void> => 
       message: "Task assigned successfully",
       data: task
     });
-  } catch (error) {
-    console.log("error===",error)
+  } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message
@@ -240,7 +239,8 @@ export const getAllTasks = async (req: Request, res: Response): Promise<void> =>
   try {
     const token = req.token
     if (!token?.id) {
-      return res.status(401).json({ message: "Invalid token payload" });
+      res.status(401).json({ message: "Invalid token payload" });
+      return;
     }
     const tasks = await Task.find({adminId: new ObjectId(token.id)}).sort({ createdAt: -1 });
     res.status(200).json({

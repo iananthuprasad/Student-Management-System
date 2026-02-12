@@ -9,7 +9,8 @@ export const getAllTasks = async (
   try {
     const token = req.token;
     if (!token?.id) {
-      return res.status(401).json({ message: "Invalid token payload" });
+       res.status(401).json({ message: "Invalid token payload" });
+       return
     }
     const tasks = await Task.find({
       studentId: new ObjectId(token.id),
