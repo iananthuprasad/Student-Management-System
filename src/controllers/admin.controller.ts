@@ -3,6 +3,7 @@ import Admin from "../models/admin.model";
 import Task from "../models/task.model";
 import { hashPassword } from "../utils/hash";
 let ObjectId = require("mongodb").ObjectId;
+import { Request, Response } from "express";
 
 export const addAdmin = async (req: Request, res: Response) => {
   try {

@@ -1,5 +1,6 @@
 import Task from "../models/task.model";
 let ObjectId = require("mongodb").ObjectId;
+import { Request, Response } from "express";
 
 export const getAllTasks = async (
   req: Request,
